@@ -1,15 +1,17 @@
 
+//grid for obstacles
 var grid = [
-  [null,null,"obstacle",null,null,"obstacle",null,null,null,null],
-  [null,null,null,null,null,null,null,null,null,null],
-  [null,"obstacle",null,null,null,null,null,null,null,null],
-  [null,null,null,null,null,null,null,null,null,null],
-  [null,null,null,null,null,null,null,null,"obstacle",null],
-  ["obstacle",null,null,null,null,null,null,null,null,null],
-  [null,null,null,null,"obstacle",null,null,null,null,null],
-  [null,null,null,null,null,null,null,null,null,null],
-  [null,"obstacle",null,null,null,null,null,null,null,null],
-  [null,null,null,null,"obstacle",null,null,null,"obstacle",null]
+  [null,null,null,"obstacle",null,"obstacle",null,null,null,null,null],
+  [null,null,null,null,null,null,null,null,null,null,null],
+  [null,"obstacle",null,null,null,null,null,null,null,null,null],
+  [null,null,null,null,null,null,null,null,null,null,null],
+  [null,null,null,null,null,null,null,null,"obstacle",null,null],
+  ["obstacle",null,null,null,null,null,null,null,null,null,null],
+  [null,null,null,null,"obstacle",null,null,null,null,null,null],
+  [null,null,null,null,null,null,null,null,null,null,null],
+  [null,"obstacle",null,null,null,null,null,null,null,null,null],
+  [null,null,null,null,"obstacle",null,null,null,"obstacle",null,null],
+  ["obstacle",null,null,null,null,null,"obstacle",null,null,null,null]
 ]
 
 //rover object
@@ -55,30 +57,27 @@ function moveForward(){
   switch (rover.direction){
     case "N":
       //these if statements inside the case are used for the boundries
-      if(boundries(rover.y - 1) === "break"){
+      if(boundriesObstacles(rover.y - 1) === "break"){
         break switchLabel1;
       }
       rover.y = rover.y - 1;
       break;
     case "S":
-      if(boundries(rover.y + 1) === "break"){
+      if(boundriesObstacles(rover.y + 1) === "break"){
         break switchLabel1;
       }
-      boundries(rover.y);
       rover.y = rover.y + 1;
       break;
     case "W":
-      if(boundries(rover.x - 1) === "break"){
+      if(boundriesObstacles(rover.x - 1) === "break"){
        break switchLabel1;
      }
-      boundries(rover.x);
       rover.x = rover.x - 1;
       break;
     case "E":
-      if(boundries(rover.x + 1) === "break"){
+      if(boundriesObstacles(rover.x + 1) === "break"){
         break switchLabel1;
       }
-      boundries(rover.x);
       rover.x = rover.x + 1;
       break;
   }
@@ -91,30 +90,27 @@ function moveBackwards(){
   switchLabel2:
   switch (rover.direction){
     case "N":
-      if(boundries(rover.y + 1) === "break"){
+      if(boundriesObstacles(rover.y + 1) === "break"){
         break switchLabel2;
       }
       rover.y = rover.y + 1;
       break;
     case "S":
-      if(boundries(rover.y - 1) === "break"){
+      if(boundriesObstacles(rover.y - 1) === "break"){
         break switchLabel2;
       }
-      boundries(rover.y);
       rover.y = rover.y - 1;
       break;
     case "W":
-      if(boundries(rover.x + 1) === "break"){
+      if(boundriesObstacles(rover.x + 1) === "break"){
        break switchLabel2;
      }
-      boundries(rover.x);
       rover.x = rover.x + 1;
       break;
     case "E":
-      if(boundries(rover.x - 1) === "break"){
+      if(boundriesObstacles(rover.x - 1) === "break"){
         break switchLabel2;
       }
-      boundries(rover.x);
       rover.x = rover.x - 1;
       break;
   }
@@ -144,36 +140,48 @@ function recieveCommands(commands){
 
 //checks for out of bounds and obstacles
 function boundriesObstacles(movingTo){
+  //first checks for rover direction
   switch(rover.direction){
     case "N":
+     //checks if going out of bounds
      if((movingForward && movingTo === -1) || (!movingForward && movingTo === 11)){
+      console.log("out of bounds");
        return "break";
      }
-     else if(grid[rover.x,movingTo] === "obstacle"){
+     //then checks for obstacles
+     else if(grid[movingTo][rover.x] === "obstacle"){
+      console.log("obstacle");
        return "break";
      }
+     //if nothing then continue moving
      break;
     case "W":
       if((movingForward && movingTo === -1) || (!movingForward && movingTo === 11)){
+        console.log("out of bounds");
         return "break";
       }
-      else if(grid[movingTo,rover.y] === "obstacle"){
+      else if(grid[rover.y][movingTo] === "obstacle"){
+        console.log("obstacle");
         return "break";
       }
       break;
     case "S":
       if((movingForward && movingTo === 11) || (!movingForward && movingTo === -1)){
+        console.log("out of bounds");
         return "break";
       }
-      else if(grid[rover.x,movingTo] === "obstacle"){
+      else if(grid[movingTo][rover.x] === "obstacle"){
+        console.log("obstacle");
         return "break";
       }
       break;
     case "E":
       if((movingForward && movingTo === 11) || (!movingForward && movingTo === -1)){
+        console.log("out of bounds");
         return "break";
       }
-      else if(grid[movingTo,rover.y] === "obstacle"){
+      else if(grid[rover.y][movingTo] === "obstacle"){
+        console.log("obstacle");
         return "break";
       }
       break;
