@@ -1,4 +1,17 @@
 
+var grid = [
+  [null,null,"obstacle",null,null,"obstacle",null,null,null,null],
+  [null,null,null,null,null,null,null,null,null,null],
+  [null,"obstacle",null,null,null,null,null,null,null,null],
+  [null,null,null,null,null,null,null,null,null,null],
+  [null,null,null,null,null,null,null,null,"obstacle",null],
+  ["obstacle",null,null,null,null,null,null,null,null,null],
+  [null,null,null,null,"obstacle",null,null,null,null,null],
+  [null,null,null,null,null,null,null,null,null,null],
+  [null,"obstacle",null,null,null,null,null,null,null,null],
+  [null,null,null,null,"obstacle",null,null,null,"obstacle",null]
+]
+
 //rover object
 var rover = {
   direction: "N",
@@ -129,18 +142,40 @@ function recieveCommands(commands){
   console.log(traelLog);
 }
 
-//function used so the rover dosen't go out of bundries
-function boundries(movingTo){
-  if(movingForward && (rover.direction === "N" || rover.direction === "E") || !movingForward && (rover.direction === "S" || rover.direction === "W")) {
-    if(movingTo === -1){
-      console.log("OUT OF BOUNDRIES!!!");
-      return "break";
-    }
-  }
-  else{
-    if(movingTo === 11){
-      console.log("OUT OF BOUNDRIES!!!");
-      return "break";
-    }
+//checks for out of bounds and obstacles
+function boundriesObstacles(movingTo){
+  switch(rover.direction){
+    case "N":
+     if((movingForward && movingTo === -1) || (!movingForward && movingTo === 11)){
+       return "break";
+     }
+     else if(grid[rover.x,movingTo] === "obstacle"){
+       return "break";
+     }
+     break;
+    case "W":
+      if((movingForward && movingTo === -1) || (!movingForward && movingTo === 11)){
+        return "break";
+      }
+      else if(grid[movingTo,rover.y] === "obstacle"){
+        return "break";
+      }
+      break;
+    case "S":
+      if((movingForward && movingTo === 11) || (!movingForward && movingTo === -1)){
+        return "break";
+      }
+      else if(grid[rover.x,movingTo] === "obstacle"){
+        return "break";
+      }
+      break;
+    case "E":
+      if((movingForward && movingTo === 11) || (!movingForward && movingTo === -1)){
+        return "break";
+      }
+      else if(grid[movingTo,rover.y] === "obstacle"){
+        return "break";
+      }
+      break;
   }
 }
