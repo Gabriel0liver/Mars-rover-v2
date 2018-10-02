@@ -44,6 +44,20 @@ var travelLog1 = [];
 var travelLog2 = [];
 var travelLog3 = [];
 
+//function to push coordinates into each travel log
+function travelLog(rover){
+  switch(rover){
+    case rover1:
+      travelLog1.push(" x:"+rover.x+"y:"+rover.y);
+      break;
+    case rover2:
+      travelLog2.push(" x:"+rover.x+"y:"+rover.y);
+      break;
+    case rover3:
+      travelLog3.push(" x:"+rover.x+"y:"+rover.y);
+      break;
+  }
+}
 
 function turnLeft(rover){
   if(rover.direction === "E"){
@@ -75,6 +89,7 @@ function moveForward(rover){
       if(boundriesObstacles(rover.y - 1, rover) === "break"){
         break switchLabel1;
       }
+      //move rover to position
       rover.y = rover.y - 1;
       break;
     case "S":
@@ -96,7 +111,6 @@ function moveForward(rover){
       rover.x = rover.x + 1;
       break;
   }
-  grid[rover.y][rover.x] = "rover";
   travelLog(rover);
 }
 
@@ -130,12 +144,14 @@ function moveBackwards(rover){
       rover.x = rover.x - 1;
       break;
   }
-  grid[rover.y][rover.x] = "rover";
   travelLog(rover);
 }
 
 //function used to recieve all te commands and process them through their respective function
 function recieveCommands(commands,rover){
+  //clear grid of rovers last position
+  grid[rover.y][rover.x] = null;
+  //cycle through every command
   for(i in commands){
     switch(commands[i]){
       case "f":
@@ -152,7 +168,9 @@ function recieveCommands(commands,rover){
         break;
     }
   }
-  console.log(travelLog1, travelLog2, travelLog3);
+  //update grid with rovers new position
+  grid[rover.y][rover.x] = "rover";
+  console.log("rover1: "+travelLog1, "rover2: "+travelLog2, "rover3: "+travelLog3);
 }
 
 //checks for out of bounds and obstacles
@@ -162,59 +180,62 @@ function boundriesObstacles(movingTo,rover){
     case "N":
      //checks if going out of bounds
      if((movingForward && movingTo === -1) || (!movingForward && movingTo === 11)){
-      console.log("out of bounds");
+      console.log("WARNING: out of bounds");
        return "break";
      }
      //then checks for obstacles
-     else if(grid[movingTo][rover.x] === ("obstacle" || "rover")) {
-      console.log("obstacle");
+     else if(grid[movingTo][rover.x] === "obstacle") {
+      console.log("WARNING: obstacle");
        return "break";
      }
+     //finally checks for other rovers
+     else if(grid[movingTo][rover.x] === "rover"){
+      console.log("WARNING: other rover");
+      return "break";
+    }
      //if nothing then continue moving
      break;
     case "W":
       if((movingForward && movingTo === -1) || (!movingForward && movingTo === 11)){
-        console.log("out of bounds");
+        console.log("WARNING: out of bounds");
         return "break";
       }
-      else if(grid[rover.y][movingTo] === ("obstacle" || "rover")){
-        console.log("obstacle");
+      else if(grid[rover.y][movingTo] === "obstacle"){
+        console.log("WARNING: obstacle");
+        return "break";
+      }
+      else if(grid[rover.y][movingTo] === "rover"){
+        console.log("WARNING: other rover");
         return "break";
       }
       break;
     case "S":
       if((movingForward && movingTo === 11) || (!movingForward && movingTo === -1)){
-        console.log("out of bounds");
+        console.log("WARNING: out of bounds");
         return "break";
       }
-      else if(grid[movingTo][rover.x] === ("obstacle" || "rover")){
-        console.log("obstacle");
+      else if(grid[movingTo][rover.x] === "obstacle"){
+        console.log("WARNING: obstacle");
+        return "break";
+      }
+      else if(grid[movingTo][rover.x] === "rover"){
+        console.log("WARNING: other rover");
         return "break";
       }
       break;
     case "E":
       if((movingForward && movingTo === 11) || (!movingForward && movingTo === -1)){
-        console.log("out of bounds");
+        console.log("WARNING: out of bounds");
         return "break";
       }
-      else if(grid[rover.y][movingTo] === ("obstacle"  || "rover")){
-        console.log("obstacle");
+      else if(grid[rover.y][movingTo] === "obstacle"){
+        console.log("WARNING: obstacle");
         return "break";
       }
-      break;
-  }
-}
-
-function travelLog(rover){
-  switch(rover){
-    case rover1:
-      travelLog1.push("x:"+rover.x+" y:"+rover.y);
-      break;
-    case rover2:
-      travelLog2.push("x:"+rover.x+" y:"+rover.y);
-      break;
-    case rover3:
-      travelLog2.push("x:"+rover.x+" y:"+rover.y);
+      else if(grid[rover.y][movingTo] === "rover"){
+        console.log("WARNING: other rover");
+        return "break";
+      }
       break;
   }
 }
